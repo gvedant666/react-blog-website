@@ -10,25 +10,31 @@ const BlogDetails = () => {
 
     const handleDelete = () => {
         setDeleting(true);
-        fetch('http://localhost:8000/blogs/' + id, {
-            method: 'DELETE'
-        })
-        .then(() => {
-            console.log('Blog Deleted');
-            setDeleting(false);
-            navigate('/');
-        })
-        .catch((error) => {
-            console.error('Error deleting the blog:', error);
-            setDeleting(false);
-        });
-    }
+        setTimeout(() => {
+            fetch('http://localhost:8000/blogs/' + id, {
+                method: 'DELETE'
+            })
+            .then(() => {
+                console.log('Blog Deleted');
+                setDeleting(false);
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Error deleting the blog:', error);
+                setDeleting(false);
+            });
+        }, 1000);
+    };
 
-    return ( 
+    const handleEdit = () => {
+        navigate(`/edit/${id}`);
+    };
+
+    return (
         <div className="BlogDetails">
             <div className="title">
                 {isLoading && <div>Loading...</div>}
-                {isErr && <div style={{color:"red", fontSize: "50px"}}>Blog not found :(</div>}
+                {isErr && <div style={{ color: "red", fontSize: "50px" }}>Blog not found :(</div>}
                 {Blog && (
                     <article>
                         <h2>{Blog.title}</h2>
@@ -36,8 +42,11 @@ const BlogDetails = () => {
                         <div>{Blog.body}</div>
                     </article>
                 )}
-                {!deleting && <button onClick={handleDelete}>Delete</button>}
-                {deleting && <button disabled>Deleting...</button>}
+                <div className="buttons">
+                    {!deleting && <button onClick={handleDelete}>Delete</button>}
+                    {deleting && <button disabled>Deleting...</button>}
+                    <button onClick={handleEdit}>Edit</button>
+                </div>
             </div>
         </div>
     );
